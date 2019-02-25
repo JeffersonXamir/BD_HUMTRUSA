@@ -299,6 +299,45 @@ BEGIN
     END */$$
 DELIMITER ;
 
+/* Procedure structure for procedure `agregarComponenteProducto` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `agregarComponenteProducto` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarComponenteProducto`(in op int,in componente text,out valor text)
+BEGIN
+	declare val int;
+	if(op=1)then
+		set val = (SELECT COUNT(`nombre`)  FROM `clase_producto` WHERE `nombre` = componente);
+		IF(val<1)then	
+		insert into `clase_producto`(`nombre`,`estado`)values(componente, 'A');
+		set valor='CLASE AGREGADA';
+		else 
+		set valor = 'CLASE YA EXISTE';
+		end if;
+	end if;
+	if(op=2)then
+		SET val = (SELECT COUNT(`nombre`)  FROM `tipo_producto` WHERE `nombre` = componente);
+		IF(val<1)THEN
+		insert into `tipo_producto`(`nombre`,`estado`)VALUES(componente, 'A');
+		SET valor='TIPO AGREGADO';
+		ELSE 
+		SET valor = 'TIPO YA EXISTE';
+		END IF;
+	end if;
+	IF(op=3)THEN
+		SET val = (SELECT COUNT(`nombre`)  FROM `medida_producto` WHERE `nombre` = componente);
+		IF(val<1)THEN
+		INSERT INTO `medida_producto`(`nombre`,`estado`)VALUES(componente, 'A');
+		SET valor='MEDIDA AGREGADA';
+		ELSE 
+		SET valor = 'MEDIDA YA EXISTE';
+		END IF;
+	END IF;
+    END */$$
+DELIMITER ;
+
 /* Procedure structure for procedure `inactivarProducto` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `inactivarProducto` */;
@@ -393,30 +432,6 @@ BEGIN
     END */$$
 DELIMITER ;
 
-/* Procedure structure for procedure `listarUsuario` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `listarUsuario` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarUsuario`(in op int)
-BEGIN
-	if(op=1)then
-	select `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
-	from `usuario` where `estado`='A';
-	end if;
-	IF(op=2)THEN
-	SELECT `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
-	FROM `usuario` WHERE `estado`='I';
-	end if;
-	IF(op=3)THEN
-	SELECT `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
-	FROM `usuario` WHERE `tipo_usuario`='CLIENTE';
-	end if;
-	
-    END */$$
-DELIMITER ;
-
 /* Procedure structure for procedure `listarJoinProductos` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `listarJoinProductos` */;
@@ -442,6 +457,30 @@ JOIN `medida_producto` mp ON mp.`id`=p.`medida`
 WHERE p.`estado`='I';
 END IF;
 	END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `listarUsuario` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `listarUsuario` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `listarUsuario`(in op int)
+BEGIN
+	if(op=1)then
+	select `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
+	from `usuario` where `estado`='A';
+	end if;
+	IF(op=2)THEN
+	SELECT `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
+	FROM `usuario` WHERE `estado`='I';
+	end if;
+	IF(op=3)THEN
+	SELECT `id`,`cedula`,`nombres`,`apellidos`,`telefono`,`direccion`,`correo`,`contrasena`,`tipo_usuario`,`estado` 
+	FROM `usuario` WHERE `tipo_usuario`='CLIENTE';
+	end if;
+	
+    END */$$
 DELIMITER ;
 
 /* Procedure structure for procedure `modificarProducto` */
